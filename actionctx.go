@@ -124,12 +124,10 @@ func (actx *actionctx) callFilter(mi methodInfo, instance reflect.Value, w http.
 
 	defer func() {
 		if p := recover(); p != nil {
-			if p != nil {
-				pa := lazysupport.NewPanic(p, debug.Stack(), 1)
-				callPanicHandler(cctx, pa)
-				err = errStop
-				return
-			}
+			pa := lazysupport.NewPanic(p, debug.Stack(), 1)
+			callPanicHandler(cctx, pa)
+			err = errStop
+			return
 		}
 	}()
 	outs, err := call(cctx)

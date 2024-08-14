@@ -25,7 +25,7 @@ func (s *SessionController) Edit() string {
 func (s *SessionController) Update() string {
 	return "update"
 }
-func (s *SessionController) POST_Search() string {
+func (s *SessionController) POSTSearch() string {
 	return "search"
 }
 
@@ -46,7 +46,7 @@ func TestDrawer_Resource(t *testing.T) {
 	test("edit", "GET", "/session/edit", "edit_session", "edit", "SessionController#Edit")
 	test("update", "PUT,PATCH", "/session", "session", "update", "SessionController#Update")
 	test("delete", "DELETE", "/session", "session", "delete", "SessionController#Delete")
-	test("search", "POST", "/session/search", "session_search", "search", "SessionController#POST_Search")
+	test("search", "POST", "/session/search", "session_search", "search", "SessionController#POSTSearch")
 }
 
 type ProfileController struct {
@@ -71,7 +71,7 @@ func TestDrawer_ResourceNested(t *testing.T) {
 	test("edit", "GET", "/profile/session/edit", "edit_profile_session", "edit", "SessionController#Edit")
 	test("update", "PUT,PATCH", "/profile/session", "profile_session", "update", "SessionController#Update")
 	test("delete", "DELETE", "/profile/session", "profile_session", "delete", "SessionController#Delete")
-	test("search", "POST", "/profile/session/search", "profile_session_search", "search", "SessionController#POST_Search")
+	test("search", "POST", "/profile/session/search", "profile_session_search", "search", "SessionController#POSTSearch")
 }
 
 func TestDrawer_ResourceScoped(t *testing.T) {
@@ -91,6 +91,6 @@ func TestDrawer_ResourceScoped(t *testing.T) {
 	test("edit", "GET", "/cool/session/edit", "edit_admin_session", "edit", "SessionController#Edit")
 	test("update", "PUT,PATCH", "/cool/session", "admin_session", "update", "SessionController#Update")
 	test("delete", "DELETE", "/cool/session", "admin_session", "delete", "SessionController#Delete")
-	test("search", "POST", "/cool/session/search", "admin_session_search", "search", "SessionController#POST_Search")
+	test("search", "POST", "/cool/session/search", "admin_session_search", "search", "SessionController#POSTSearch")
 
 }

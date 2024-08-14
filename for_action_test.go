@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 )
 
@@ -62,9 +63,14 @@ func TestForAction_Filters(t *testing.T) {
 	expectForAction(t, forAction(&MoviesController{}, "Index"), "index", 200)
 }
 
+func ctxWithValue[T any](base context.Context, value T) context.Context {
+	t := reflect.TypeOf(*new(T))
+	return context.WithValue(base, t, value)
+}
+
 func TestForAction_ParamsFromContext(t *testing.T) {
 	r := httptest.NewRequest("GET", "/posts", nil)
-	r = r.WithContext(context.WithValue(r.Context(), "lazydispatch.ContextParam", ContextParam("context")))
+	r = r.WithContext(ctxWithValue(context.Background(), ContextParam("context")))
 	w := httptest.NewRecorder()
 	forAction(&MoviesController{}, "ParamFromContext").ServeHTTP(w, r)
 	body := "context"
@@ -96,7 +102,7 @@ func TestForAction_StringParams(t *testing.T) {
 	r := httptest.NewRequest("GET", "/brands/33/posts/55", nil)
 	w := httptest.NewRecorder()
 	forAction(&MoviesController{}, "Show", func(ctx context.Context, r *http.Request) context.Context {
-		return context.WithValue(ctx, "*lazydispatch.Route", &Route{
+		return context.WithValue(ctx, reflect.TypeFor[*Route](), &Route{
 			Path: "/brands/:brand_id/posts/:id",
 		})
 	}).ServeHTTP(w, r)

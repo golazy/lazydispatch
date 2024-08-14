@@ -39,13 +39,13 @@ func (p *PostsController) Delete() string {
 func (p *PostsController) Search() string {
 	return "search"
 }
-func (p *PostsController) POST_Search() string {
+func (p *PostsController) POSTSearch() string {
 	return "post_search"
 }
-func (p *PostsController) Member_GET_Approve() string {
+func (p *PostsController) MemberGETApprove() string {
 	return "member_approve"
 }
-func (p *PostsController) Member_PUT_Reject() string {
+func (p *PostsController) MemberPUTReject() string {
 	return "member_put_reject"
 }
 
@@ -64,10 +64,10 @@ func TestResourcesActionScope(t *testing.T) {
 		{"GetSearch", "search", "GET", "posts/search", "posts", "search", "admin"},
 		{"Get_Search", "search", "GET", "posts/search", "posts", "search", "admin"},
 		{"GETSearch", "search", "GET", "posts/search", "posts", "search", "admin"},
-		{"GET_Search", "search", "GET", "posts/search", "posts", "search", "admin"},
-		{"Member_GET_Approve", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
-		{"Member_Get_Approve", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
-		{"MemberGET_Approve", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
+		{"GETSearch", "search", "GET", "posts/search", "posts", "search", "admin"},
+		{"MemberGETApprove", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
+		{"MemberGet_Approve", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
+		{"MemberGETApprove", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
 		{"MemberGet_Approve", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
 		{"MemberGETApprove", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
 		{"MemberGetApprove", "approve", "GET", "posts/:post_id/approve", "post", "approve", "admin"},
@@ -125,9 +125,9 @@ func TestDrawer_Resources(t *testing.T) {
 		{"edit", "GET", "/posts/:post_id/edit", "edit_post", "edit", "PostsController#Edit"},
 		{"update", "PUT,PATCH", "/posts/:post_id", "post", "update", "PostsController#Update"},
 		{"delete", "DELETE", "/posts/:post_id", "post", "delete", "PostsController#Delete"},
-		{"post_search", "POST", "/posts/search", "search_posts", "search", "PostsController#POST_Search"},
-		{"member_approve", "GET", "/posts/:post_id/approve", "approve_post", "approve", "PostsController#Member_GET_Approve"},
-		{"member_put_reject", "PUT,PATCH", "/posts/:post_id/reject", "reject_post", "reject", "PostsController#Member_PUT_Reject"},
+		{"post_search", "POST", "/posts/search", "search_posts", "search", "PostsController#POSTSearch"},
+		{"member_approve", "GET", "/posts/:post_id/approve", "approve_post", "approve", "PostsController#MemberGETApprove"},
+		{"member_put_reject", "PUT,PATCH", "/posts/:post_id/reject", "reject_post", "reject", "PostsController#MemberPUTReject"},
 	}
 	d := newScope()
 
@@ -158,9 +158,9 @@ func TestDrawer_ResourcesAs(t *testing.T) {
 		{"edit", "GET", "/posts/:post_id/edit", "edit_article", "edit", "PostsController#Edit"},
 		{"update", "PUT,PATCH", "/posts/:post_id", "article", "update", "PostsController#Update"},
 		{"delete", "DELETE", "/posts/:post_id", "article", "delete", "PostsController#Delete"},
-		{"post_search", "POST", "/posts/search", "search_articles", "search", "PostsController#POST_Search"},
-		{"member_approve", "GET", "/posts/:post_id/approve", "approve_article", "approve", "PostsController#Member_GET_Approve"},
-		{"member_put_reject", "PUT,PATCH", "/posts/:post_id/reject", "reject_article", "reject", "PostsController#Member_PUT_Reject"},
+		{"post_search", "POST", "/posts/search", "search_articles", "search", "PostsController#POSTSearch"},
+		{"member_approve", "GET", "/posts/:post_id/approve", "approve_article", "approve", "PostsController#MemberGETApprove"},
+		{"member_put_reject", "PUT,PATCH", "/posts/:post_id/reject", "reject_article", "reject", "PostsController#MemberPUTReject"},
 	}
 	d := newScope()
 
@@ -192,9 +192,9 @@ func TestDrawer_ResourcesPath(t *testing.T) {
 		{"edit", "GET", "/articles/:post_id/edit", "edit_post", "edit", "PostsController#Edit"},
 		{"update", "PUT,PATCH", "/articles/:post_id", "post", "update", "PostsController#Update"},
 		{"delete", "DELETE", "/articles/:post_id", "post", "delete", "PostsController#Delete"},
-		{"post_search", "POST", "/articles/search", "search_posts", "search", "PostsController#POST_Search"},
-		{"member_approve", "GET", "/articles/:post_id/approve", "approve_post", "approve", "PostsController#Member_GET_Approve"},
-		{"member_put_reject", "PUT,PATCH", "/articles/:post_id/reject", "reject_post", "reject", "PostsController#Member_PUT_Reject"},
+		{"post_search", "POST", "/articles/search", "search_posts", "search", "PostsController#POSTSearch"},
+		{"member_approve", "GET", "/articles/:post_id/approve", "approve_post", "approve", "PostsController#MemberGETApprove"},
+		{"member_put_reject", "PUT,PATCH", "/articles/:post_id/reject", "reject_post", "reject", "PostsController#MemberPUTReject"},
 	}
 
 	d := newScope()
@@ -208,7 +208,8 @@ func TestDrawer_ResourcesPath(t *testing.T) {
 		})
 	}
 
-	test := func(out, method, url, name, action, target string) {
+	//test := func(out, method, url, name, action, target string) {
+	test := func(_, _, _, _, _, _ string) {
 		t.Helper()
 	}
 
@@ -231,9 +232,9 @@ func TestDrawer_Resources_RootPath(t *testing.T) {
 		{"edit", "GET", "/:post_id/edit", "edit_post", "edit", "PostsController#Edit"},
 		{"update", "PUT,PATCH", "/:post_id", "post", "update", "PostsController#Update"},
 		{"delete", "DELETE", "/:post_id", "post", "delete", "PostsController#Delete"},
-		{"post_search", "POST", "/search", "search_posts", "search", "PostsController#POST_Search"},
-		{"member_approve", "GET", "/:post_id/approve", "approve_post", "approve", "PostsController#Member_GET_Approve"},
-		{"member_put_reject", "PUT,PATCH", "/:post_id/reject", "reject_post", "reject", "PostsController#Member_PUT_Reject"},
+		{"post_search", "POST", "/search", "search_posts", "search", "PostsController#POSTSearch"},
+		{"member_approve", "GET", "/:post_id/approve", "approve_post", "approve", "PostsController#MemberGETApprove"},
+		{"member_put_reject", "PUT,PATCH", "/:post_id/reject", "reject_post", "reject", "PostsController#MemberPUTReject"},
 	}
 
 	d := newScope()
@@ -361,9 +362,9 @@ func TestDrawer_NestedResources(t *testing.T) {
 	test("edit", "GET", "/cool/posts/:post_id/edit", "edit_admin_post", "edit", "PostsController#Edit")
 	test("update", "PUT,PATCH", "/cool/posts/:post_id", "admin_post", "update", "PostsController#Update")
 	test("delete", "DELETE", "/cool/posts/:post_id", "admin_post", "delete", "PostsController#Delete")
-	test("post_search", "POST", "/cool/posts/search", "search_admin_posts", "search", "PostsController#POST_Search")
-	test("member_approve", "GET", "/cool/posts/:post_id/approve", "approve_admin_post", "approve", "PostsController#Member_GET_Approve")
-	test("member_put_reject", "PUT,PATCH", "/cool/posts/:post_id/reject", "reject_admin_post", "reject", "PostsController#Member_PUT_Reject")
+	test("post_search", "POST", "/cool/posts/search", "search_admin_posts", "search", "PostsController#POSTSearch")
+	test("member_approve", "GET", "/cool/posts/:post_id/approve", "approve_admin_post", "approve", "PostsController#MemberGETApprove")
+	test("member_put_reject", "PUT,PATCH", "/cool/posts/:post_id/reject", "reject_admin_post", "reject", "PostsController#MemberPUTReject")
 }
 
 func TestDrawer_NestedResources2(t *testing.T) {
@@ -377,9 +378,9 @@ func TestDrawer_NestedResources2(t *testing.T) {
 		{"edit", "GET", "/blogs/:blog_id/posts/:post_id/edit", "edit_blog_post", "edit", "PostsController#Edit"},
 		{"update", "PUT,PATCH", "/blogs/:blog_id/posts/:post_id", "blog_post", "update", "PostsController#Update"},
 		{"delete", "DELETE", "/blogs/:blog_id/posts/:post_id", "blog_post", "delete", "PostsController#Delete"},
-		{"post_search", "POST", "/blogs/:blog_id/posts/search", "search_blog_posts", "search", "PostsController#POST_Search"},
-		{"member_approve", "GET", "/blogs/:blog_id/posts/:post_id/approve", "approve_blog_post", "approve", "PostsController#Member_GET_Approve"},
-		{"member_put_reject", "PUT,PATCH", "/blogs/:blog_id/posts/:post_id/reject", "reject_blog_post", "reject", "PostsController#Member_PUT_Reject"},
+		{"post_search", "POST", "/blogs/:blog_id/posts/search", "search_blog_posts", "search", "PostsController#POSTSearch"},
+		{"member_approve", "GET", "/blogs/:blog_id/posts/:post_id/approve", "approve_blog_post", "approve", "PostsController#MemberGETApprove"},
+		{"member_put_reject", "PUT,PATCH", "/blogs/:blog_id/posts/:post_id/reject", "reject_blog_post", "reject", "PostsController#MemberPUTReject"},
 	}
 
 	d := newScope()

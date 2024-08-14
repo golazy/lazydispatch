@@ -1,6 +1,7 @@
 package lazydispatch
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -120,21 +121,29 @@ func processActionOutput(cctx *callctx, outs []reflect.Value, w http.ResponseWri
 	return nil
 }
 
+var (
+	tHTTPRequest        = reflect.TypeFor[*http.Request]()
+	tHTTPResponseWriter = reflect.TypeFor[http.ResponseWriter]()
+	tContextContext     = reflect.TypeFor[context.Context]()
+	tError              = reflect.TypeFor[error]()
+	tString             = reflect.TypeFor[string]()
+)
+
 func findInput(ctx *callctx, t reflect.Type) (reflect.Value, error) {
-	// Check for basic types
 	name := t.String()
-	switch name {
-	case "http.ResponseWriter":
-		return reflect.ValueOf(ctx.w), nil
-	case "*http.Request":
+	fmt.Println(name, tHTTPResponseWriter.String())
+	switch t {
+	case tHTTPRequest:
 		return reflect.ValueOf(ctx.r), nil
-	case "context.Context":
+	case tHTTPResponseWriter:
+		return reflect.ValueOf(ctx.w), nil
+	case tContextContext:
 		return reflect.ValueOf(ctx.r.Context()), nil
-	case "error":
+	case tError:
 		return reflect.ValueOf(ctx.err), nil
-	case "string":
+	case tString:
 		if ctx.stringParams == nil {
-			r := ctx.r.Context().Value("*lazydispatch.Route")
+			r := ctx.r.Context().Value(reflect.TypeFor[*Route]())
 			if r == nil {
 				return reflect.Value{}, errors.New("string param can't be filled as there is no *Route in the context")
 			}
@@ -147,8 +156,9 @@ func findInput(ctx *callctx, t reflect.Type) (reflect.Value, error) {
 		v := reflect.ValueOf(ctx.stringParams[0])
 		ctx.stringParams = ctx.stringParams[1:]
 		return v, nil
-
 	}
+	// Check for basic types
+	name = t.String()
 
 	// Try to find a generator
 	for gName, generator := range ctx.actx.generators {
@@ -167,7 +177,7 @@ func findInput(ctx *callctx, t reflect.Type) (reflect.Value, error) {
 	}
 
 	// Or get it from the context
-	out := ctx.r.Context().Value(name)
+	out := ctx.r.Context().Value(t)
 	if out != nil {
 		return reflect.ValueOf(out), nil
 	}

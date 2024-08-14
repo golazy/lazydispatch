@@ -164,10 +164,10 @@ func joinWithChar(c string, s ...string) string {
 }
 
 func getMethodFromMethodName(name string) (method, rest string, ok bool) {
-	if !method_prefix.HasPrefix(strings.ToLower(name)) {
+	if !methodPrefix.HasPrefix(strings.ToLower(name)) {
 		return "", "", false
 	}
-	method, _ = method_prefix.TrimPrefix(strings.ToLower(name))
+	method, _ = methodPrefix.TrimPrefix(strings.ToLower(name))
 	rest = strings.TrimPrefix(name[len(method):], "_")
 	method = strings.ToUpper(method)
 
@@ -270,13 +270,13 @@ func (r Resources) routeForAction(name string) *Route {
 		Target: fmt.Sprintf("%s#%s", r.controllerFullName, originalName),
 	}
 	route.Handler = forAction(r.Controller, originalName, func(ctx context.Context, req *http.Request) context.Context {
-		c := context.WithValue(ctx, "*lazydispatch.Route", route)
+		c := context.WithValue(ctx, reflect.TypeOf(route), route)
 		return c
 	})
 	return route
 }
 
-var method_prefix = lazysupport.NewStringSet("get", "post", "delete", "patch", "put")
+var methodPrefix = lazysupport.NewStringSet("get", "post", "delete", "patch", "put")
 
 func validateResources(r *Resources) {
 	errs := []error{}

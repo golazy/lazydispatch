@@ -125,7 +125,7 @@ func (nr *namedRoutes) findByModel(args ...any) *Route {
 	return nil
 }
 
-func (nr *namedRoutes) findByName(name string, args ...any) *Route {
+func (nr *namedRoutes) findByName(name string, _ ...any) *Route {
 	for _, r := range nr.routes {
 		if r.Name == name {
 			return &r

@@ -66,13 +66,13 @@ func forAction[T any](controller T, action string, ctxfn ...func(ctx context.Con
 		m := actx.t.Method(i)
 		mi := genMethodInfo(m)
 		switch {
-		case strings.HasPrefix(mi.name, "Before_"):
+		case strings.HasPrefix(mi.name, "Before_") || strings.HasPrefix(mi.name, "BEFORE"):
 			actx.befores = append(actx.befores, mi)
-		case strings.HasPrefix(mi.name, "After_"):
+		case strings.HasPrefix(mi.name, "After_") || strings.HasPrefix(mi.name, "AFTER"):
 			actx.afters = append(actx.afters, mi)
 		case mi.name == "HandleError":
 			actx.ErrorHandler = &mi
-		case strings.HasPrefix(mi.name, "Gen_"):
+		case strings.HasPrefix(mi.name, "Gen_") || strings.HasPrefix(mi.name, "GEN"):
 			if mi.nOut == 0 {
 				panic(fmt.Sprintf("Gen functions must return 1 or 2 values: %s", mi.name))
 			}

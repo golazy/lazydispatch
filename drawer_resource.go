@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"path"
 	"reflect"
 
 	"golazy.dev/lazysupport"
@@ -108,7 +107,7 @@ func (r *Resource) routeForAction(name string) *Route {
 		Target: fmt.Sprintf("%s#%s", r.controllerFullName, originalName),
 	}
 	route.Handler = forAction(r.Controller, originalName, func(ctx context.Context, req *http.Request) context.Context {
-		c := context.WithValue(ctx, "*lazydispatch.Route", route)
+		c := context.WithValue(ctx, reflect.TypeOf(route), route)
 		return c
 	})
 	return route
@@ -142,19 +141,19 @@ func (r *Resource) routes() []*Route {
 	return routes
 }
 
-func (r Resource) urlForMethod(name string) string {
-	switch name {
-	case "New":
-		return path.Join(r.path, r.newPathName)
-	case "Edit":
-		return path.Join(r.path, r.editPathName)
-	case "Create", "Update", "Delete":
-		return r.path
-	default:
-		_, name = method_prefix.TrimPrefix(name)
-		return path.Join(r.path, lazysupport.Underscorize(name))
-	}
-}
+//func (r Resource) urlForMethod(name string) string {
+//	switch name {
+//	case "New":
+//		return path.Join(r.path, r.newPathName)
+//	case "Edit":
+//		return path.Join(r.path, r.editPathName)
+//	case "Create", "Update", "Delete":
+//		return r.path
+//	default:
+//		_, name = method_prefix.TrimPrefix(name)
+//		return path.Join(r.path, lazysupport.Underscorize(name))
+//	}
+//}
 
 func validateResource(rsrcs *Resource) {
 	errs := []error{}

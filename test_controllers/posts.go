@@ -27,12 +27,12 @@ func (p *PostsController) Delete() string {
 func (p *PostsController) Search() string {
 	return "search"
 }
-func (p *PostsController) POST_Search() string {
+func (p *PostsController) POSTSearch() string {
 	return "post_search"
 }
-func (p *PostsController) Member_Approve() string {
+func (p *PostsController) MemberApprove() string {
 	return "member_approve"
 }
-func (p *PostsController) Member_PUT_Reject() string {
+func (p *PostsController) MemberPUT_Reject() string {
 	return "member_put_reject"
 }

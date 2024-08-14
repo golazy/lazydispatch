@@ -3,6 +3,7 @@ package lazydispatch
 import (
 	"fmt"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -31,38 +32,59 @@ func TestDispatcher(t *testing.T) {
 
 }
 
-var postsController = &PostsController{}
-
-func ExampleDispatcherUse(t *testing.T) {
+func ExampleDispatcher_Use() {
 	d := New()
 	d.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			fmt.Println(r.URL)
+			fmt.Println("Got request:", r.URL)
 			next.ServeHTTP(w, r)
 		})
 	})
+	s := httptest.NewServer(d)
+	defer s.Close()
+	r, _ := http.NewRequest("GET", s.URL+"/posts", nil)
+	s.Client().Do(r)
 
+	// Output:
+	// Got request: /posts
 }
 
-func ExampleDispatcherDraw(t *testing.T) {
+type UsersController struct{}
+
+func (UsersController) Index() string {
+	return "index"
+}
+
+type PagesController struct{}
+
+func (*PagesController) Index() string {
+	return "index"
+}
+func (*PagesController) Show(page string) string {
+	return "This is " + page
+}
+
+func ExampleDispatcher_Draw() {
+	// 	type PagesController struct{}
+	//
+	//  func (*PagesController) Index() string {
+	//  	return "index"
+	//  }
+	//
+	//  func (*PagesController) Show(page string) string {
+	//    return "This is " + page
+	//  }
+
 	dispatcher := New()
 	dispatcher.Draw(func(routes *Scope) {
-		routes.Path("").Resource(sessionController).NewName()
-		routes.Resources(postsController)
-		routes.Namespace("admin").Draw(func(admin lazydispatch.Scope) {
-			admin.Resources(usersController)
-		})
-
-		routes.Path("/backend/*").Use(otherHandler)
-		routes.Path("/").Resources(pagesController)
+		routes.Resources(&PagesController{})
 	})
 
-	fmt.Printf("%20s\t%20s\t%20s\n", "Path", "Target", "Name")
 	for _, r := range dispatcher.Routes {
-		fmt.Printf("%20s\t", r.URL, r.Target, r.Name)
+		fmt.Printf("%s\t%s\t%s\n", r.URL, r.Target, r.Name)
 	}
 
 	// Output:
-	// Path Target Name
-	//
+	// /pages	PagesController#Index	pages
+	// /pages/:page_id	PagesController#Show	page
 }
