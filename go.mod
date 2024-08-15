@@ -6,8 +6,8 @@ require (
 	github.com/gorilla/schema v1.4.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/timewasted/go-accept-headers v0.0.0-20130320203746-c78f304b1b09
-	golazy.dev/lazysupport v0.0.0-20240806142017-c929e30247a2
-	golazy.dev/router v0.0.0-20240806142725-a855a1ebc2fc
+	golazy.dev/lazysupport v0.0.10
+	golazy.dev/router v0.0.10
 )
 
 require (
@@ -18,5 +18,5 @@ require (
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.27 // indirect
 	github.com/mr-tron/base58 v1.2.0 // indirect
-	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
 )
